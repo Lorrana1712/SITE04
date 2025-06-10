@@ -1,0 +1,193 @@
+/* styles.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #c40000;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+section {
+  background-color: #fff;
+  border: 2px solid #c40000;
+  padding: 40px;
+  margin: 40px;
+  border-radius: 8px;
+}
+
+h2 {
+  color: #c40000;
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+button {
+  background-color: #c40000;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #a00000;
+}
+
+#log, #relatorio {
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.confirm-section {
+  background-color: #fff;
+  border: 2px solid #c40000;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.login-container{
+  background-color: #fff;
+  border: 2px solid #c40000;
+  padding: 40px;
+  margin: 40px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #c40000;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  border: 2px solid #c40000;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: #a00000;
+  box-shadow: 0 0 5px rgba(196, 0, 0, 0.5);
+}
+
+/* Botão moderno */
+#loginBtn {
+  width: 108%;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #c40000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#loginBtn:hover {
+  background-color: #a00000;
+  transform: translateY(-2px);
+}
+
+#loginBtn:active {
+  background-color: #870000;
+  transform: translateY(0);
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #c40000;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+/*SALAS*/
+body {
+font-family: Arial, sans-serif;
+margin: 20px;
+background-color: #f4f4f4;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+
+table, th, td {
+border: 1px solid black;
+}
+
+th, td {
+padding: 10px;
+text-align: center;
+}
+
+.presente {
+background-color: lightgreen;
+}
+
+.falta {
+background-color: lightcoral;
+}
+
+.passou {
+background-color: lightblue;
+}
+
+.nao-passou {
+background-color: lightgray;
+}
+.perfil {
+    display: inline-block;
+    position: relative;
+    top: -10px; /* Ajustepara alinhar ao lado do seletor */
+    float: right;
+}
+
+.perfil button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #be2727;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.perfil button:hover {
+    background-color: #be2727;
+}

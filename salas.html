@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styless.css">
+    <title>Registro de Catraca e Presença</title>
+    
+</head>
+<body>
+    <header>
+    <h1>PRESENÇA JÁ-143</h1>
+    </header>
+    <br>
+    <br>
+    <a href="login.html"><button onclick="voltaraologin()">VOLTAR AO LOGIN</button></a>
+    <h2>Registro de Catraca e Presença 
+    </h2>
+    <div class="perfil">
+        <a href="usuario.html"><button onclick="usuario()">PERFIL DO PROFESSOR </button></a>
+   </div>
+                                                       
+    <label for="turma">Escolha uma turma:</label>
+    <select id="turma" onchange="atualizarSalas()">
+        <option value="">Selecione</option>
+        <option value="Fundamental">Ensino Fundamental</option>
+        <option value="Médio">Ensino Médio</option>
+    </select>
+
+    <label for="sala">Escolha uma sala:</label>
+    <select id="sala" onchange="filtrarAlunos()">
+        <option value="">Selecione a turma primeiro</option>
+    </select>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Turma</th>
+                <th>Sala</th>
+                <th>Passou pela Catraca?</th>
+                <th>Presença</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="registro">
+            <!-- Os dados dos alunos serão carregados automaticamente -->
+        </tbody>
+    </table>
+  
+    <script>
+        // Simulação de alunos (até 32 alunos por sala)
+        const alunosPorSala = {
+            "Fundamental": {
+                "Sala 9°": Array.from({length: 32}, (_, i) => ({
+                    nome: `Aluno ${i+1}`,
+                    turma: "Fundamental",
+                    sala: "Sala 9°",
+                    passouCatraca: Math.random() < 0.5, // Simula aleatoriamente quem passou
+                    statusPresenca: "Não registrado"
+                })),
+                "Sala 8°": Array.from({length: 32}, (_, i) => ({
+                    nome: `Aluno ${i+1}`,
+                    turma: "Fundamental",
+                    sala: "Sala 8°",
+                    passouCatraca: Math.random() < 0.5,
+                    statusPresenca: "Não registrado"
+                }))
+            },
+            "Médio": {
+                "Sala 2° EM": Array.from({length: 32}, (_, i) => ({
+                    nome: `Aluno ${i+1}`,
+                    turma: "Médio",
+                    sala: "Sala 2° EM",
+                    passouCatraca: Math.random() < 0.5,
+                    statusPresenca: "Não registrado"
+                })),
+                "Sala 1° EM": Array.from({length: 32}, (_, i) => ({
+                    nome: `Aluno ${i+1}`,
+                    turma: "Médio",
+                    sala: "Sala 1° EM",
+                    passouCatraca: Math.random() < 0.5,
+                    statusPresenca: "Não registrado"
+                }))
+            }
+        };
+
+        function atualizarSalas() {
+            let turmaSelecionada = document.getElementById("turma").value;
+            let salaSelect = document.getElementById("sala");
+
+            salaSelect.innerHTML = "<option value=''>Selecione</option>";
+
+            if (turmaSelecionada && alunosPorSala[turmaSelecionada]) {
+                Object.keys(alunosPorSala[turmaSelecionada]).forEach(sala => {
+                    let opcao = document.createElement("option");
+                    opcao.value = sala;
+                    opcao.textContent = sala;
+                    salaSelect.appendChild(opcao);
+                });
+            }
+
+            filtrarAlunos();
+        }
+
+        function filtrarAlunos() {
+            let turmaSelecionada = document.getElementById("turma").value;
+            let salaSelecionada = document.getElementById("sala").value;
+            const tabela = document.getElementById("registro");
+
+            tabela.innerHTML = "";
+
+            if (turmaSelecionada && salaSelecionada && alunosPorSala[turmaSelecionada][salaSelecionada]) {
+                alunosPorSala[turmaSelecionada][salaSelecionada].forEach(aluno => {
+                    let linha = document.createElement("tr");
+                    linha.innerHTML = `
+                        <td>${aluno.nome}</td>
+                        <td>${aluno.turma}</td>
+                        <td>${aluno.sala}</td>
+                        <td class="${aluno.passouCatraca ? 'passou' : 'nao-passou'}">
+                            ${aluno.passouCatraca ? "Passou" : "Não passou"}
+                        </td>
+                        <td class="status">${aluno.statusPresenca}</td>
+                        <td>
+                            <button onclick="marcarPresenca(this, 'presente')">Presente</button>
+                            <button onclick="marcarPresenca(this, 'falta')">Falta</button>
+                        </td>
+                    `;
+                    tabela.appendChild(linha);
+                });
+            }
+        }
+
+        function marcarPresenca(botao, status) {
+            let linha = botao.parentNode.parentNode;
+            let campoStatus = linha.querySelector(".status");
+            campoStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+            campoStatus.className = status;
+        }
+         function verificarConclusao() {
+    let totalLinhas = document.querySelectorAll("#registro tr").length;
+    let totalMarcadas = document.querySelectorAll("#registro .presente, #registro .falta").length;
+
+    if (totalMarcadas === totalLinhas && totalLinhas > 0) {
+        setTimeout(() => {
+            alert("O Relatório está completo?");
+            setTimeout(() => {
+                alert("O Relatório será enviado à Secretaria e à Cozinha.");
+                // Aqui você pode adicionar a lógica para o envio real do relatório
+            }, 1000);
+        }, 500);
+    }
+}
+
+function marcarPresenca(botao, status) {
+    let linha = botao.parentNode.parentNode;
+    let campoStatus = linha.querySelector(".status");
+    campoStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    campoStatus.className = status;
+
+    verificarConclusao(); // Chama a função sempre que uma presença é marcada
+}
+function filtrarAlunos() {
+    let turmaSelecionada = document.getElementById("turma").value;
+    let salaSelecionada = document.getElementById("sala").value;
+    const tabela = document.getElementById("registro");
+
+    tabela.innerHTML = "";
+
+    if (turmaSelecionada && salaSelecionada && alunosPorSala[turmaSelecionada][salaSelecionada]) {
+        alunosPorSala[turmaSelecionada][salaSelecionada].forEach(aluno => {
+            // Se o aluno não passou pela catraca, já marca falta automaticamente
+            if (!aluno.passouCatraca) {
+                aluno.statusPresenca = "Falta";
+            }
+
+            let linha = document.createElement("tr");
+            linha.innerHTML = `
+                <td>${aluno.nome}</td>
+                <td>${aluno.turma}</td>
+                <td>${aluno.sala}</td>
+                <td class="${aluno.passouCatraca ? 'passou' : 'nao-passou'}">
+                    ${aluno.passouCatraca ? "Passou" : "Não passou"}
+                </td>
+                <td class="status">${aluno.statusPresenca}</td>
+                <td>
+                    <button onclick="marcarPresenca(this, 'presente')">Presente</button>
+                    <button onclick="marcarPresenca(this, 'falta')">Falta</button>
+                </td>
+            `;
+            tabela.appendChild(linha);
+        });
+    }
+}
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styless.css">
+    <title>Perfil do Professor</title>
+</head>
+<body>
+    <header>
+        <h1>Perfil do Professor</h1>
+    </header>
+    <br>
+    <br>
+ <a href="salas.html"><button onclick="voltaraoregistros()"> VOLTAR AOS REGISTROS</button></a>
+    <section id="dadosProfessor">
+        <h2>Bem-vindo, <span id="nomeProfessor"></span>!</h2>
+        <p><strong>Email:</strong> <span id="emailProfessor"></span></p>
+
+        <h3>Suas turmas:</h3>
+        <div id="listaSalas"></div>
+    </section>
+
+    <section id="relatoriosMensais" style="display: none;">
+        <h3>Relatórios da Sala: <span id="nomeSala"></span></h3>
+        <ul id="listaMeses"></ul>
+    <button id="voltar" onclick="voltarPerfil()" style="display: none;">VOLTAR</button>
+
+    </section>
+   
+
+    <script>
+        const professores = [
+            {
+                nome: "Carlos",
+                email: "carlos.professor@email.com",
+                salas: ["Sala 9°", "Sala 8°", "Sala 2° EM"],
+                relatoriosPorSala: {
+                    "Sala 9°": criarRelatoriosMensais(),
+                    "Sala 8°": criarRelatoriosMensais(),
+                    "Sala 2° EM": criarRelatoriosMensais()
+                }
+            }
+        ];
+
+        function criarRelatoriosMensais() {
+            const meses = [
+                "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+            ];
+            let relatorios = {};
+
+            meses.forEach(mes => {
+                let quantidadePendentes = Math.floor(Math.random() * 5) + 1; // Gera de 1 a 5 relatórios pendentes
+                relatorios[mes] = {
+                    preenchidos: [],
+                    pendentes: Array.from({ length: quantidadePendentes }, (_, i) => `Relatório ${i + 1}`)
+                };
+            });
+
+            return relatorios;
+        }
+
+        let professorAtual = professores[0]; 
+
+        function carregarPerfilProfessor() {
+            document.getElementById("nomeProfessor").innerText = professorAtual.nome;
+            document.getElementById("emailProfessor").innerText = professorAtual.email;
+
+            let listaSalas = document.getElementById("listaSalas");
+            listaSalas.innerHTML = "";
+
+            professorAtual.salas.forEach(sala => {
+                let botao = document.createElement("button");
+                botao.textContent = sala;
+                botao.onclick = () => carregarRelatoriosMensais(sala);
+                botao.style.margin = "10px";
+                botao.style.padding = "10px";
+                botao.style.fontSize = "16px";
+                listaSalas.appendChild(botao);
+            });
+        }
+
+        function carregarRelatoriosMensais(sala) {
+            document.getElementById("nomeSala").innerText = sala;
+            
+            let listaMeses = document.getElementById("listaMeses");
+            listaMeses.innerHTML = "";
+
+            let meses = Object.keys(professorAtual.relatoriosPorSala[sala]);
+
+            meses.forEach(mes => {
+                let divMes = document.createElement("div");
+                divMes.innerHTML = `<h4>${mes.toUpperCase()}</h4>`;
+
+                let preenchidos = professorAtual.relatoriosPorSala[sala][mes].preenchidos;
+                let pendentes = professorAtual.relatoriosPorSala[sala][mes].pendentes;
+
+                divMes.innerHTML += `<p class="preenchido-${mes}"><strong>Dias Preenchidos:</strong> ${preenchidos.length ? preenchidos.length : "Nenhum"}</p>`;
+                divMes.innerHTML += `<p class="pendente-${mes}"><strong> Dias Pendentes:</strong> ${pendentes.length ? pendentes.length + " relatório(s) pendente(s)" : "Nenhum"}</p>`;
+
+                let botaoConfirmar = document.createElement("button");
+                botaoConfirmar.textContent = preenchidos.length ? `✅ ${preenchidos.length} relatório(s) preenchido(s)` : "📄 Confirmar preenchimento";
+                botaoConfirmar.style.margin = "5px";
+                botaoConfirmar.onclick = () => confirmarPreenchimento(sala, mes, botaoConfirmar);
+
+                divMes.appendChild(botaoConfirmar);
+                listaMeses.appendChild(divMes);
+            });
+
+            document.getElementById("relatoriosMensais").style.display = "block";
+            document.getElementById("dadosProfessor").style.display = "none";
+            document.getElementById("voltar").style.display = "block";
+        }
+
+        function confirmarPreenchimento(sala, mes, botao) {
+            let numPendentes = professorAtual.relatoriosPorSala[sala][mes].pendentes.length;
+            let numPreenchidos = professorAtual.relatoriosPorSala[sala][mes].preenchidos.length + numPendentes;
+
+            professorAtual.relatoriosPorSala[sala][mes].preenchidos = Array.from({ length: numPreenchidos }, (_, i) => `Relatório ${i + 1}`);
+            professorAtual.relatoriosPorSala[sala][mes].pendentes = [];
+
+            botao.textContent = `✅ ${numPreenchidos} relatório(s) preenchido(s)`;
+            botao.disabled = true;
+
+            atualizarInterfaceMes(sala, mes, numPreenchidos);
+            verificarConclusaoGeral(sala);
+        }
+
+        function atualizarInterfaceMes(sala, mes, numPreenchidos) {
+            document.querySelector(`.preenchido-${mes}`).innerHTML = `<strong>Dias Preenchidos:</strong> ${numPreenchidos} relatório(s)`;
+            document.querySelector(`.pendente-${mes}`).innerHTML = "<strong>Dias Pendentes:</strong> Nenhum";
+        }
+
+        function verificarConclusaoGeral(sala) {
+            let meses = Object.keys(professorAtual.relatoriosPorSala[sala]);
+            let todosPreenchidos = meses.every(mes => professorAtual.relatoriosPorSala[sala][mes].pendentes.length === 0);
+
+            if (todosPreenchidos) {
+                alert(`Todos os relatórios da sala ${sala} estão preenchidos! Nenhuma pendência.`);
+            } else {
+                alert(`Ainda há relatórios pendentes na sala ${sala}. Continue preenchendo!`);
+            }
+        }
+
+        function voltarPerfil() {
+            document.getElementById("relatoriosMensais").style.display = "none";
+            document.getElementById("dadosProfessor").style.display = "block";
+            document.getElementById("voltar").style.display = "none";
+        }
+
+        carregarPerfilProfessor();
+    </script>
+
+      <footer>
+    <div class="footer"> 
+        CENTRO EDUCACIONAL SESI(SP)-143
+    </div>
+  </footer>
+</body>
+</html>
